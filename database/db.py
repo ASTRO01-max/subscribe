@@ -1,25 +1,28 @@
 import psycopg2
 
-def add_user(userame):
-    conn = psycopg2.connect("dbname=azamjon user=azamjon password=1111")
+def add_user(username):
+    conn = psycopg2.connect("dbname=subscribe user=postgres password=1234")
     cur = conn.cursor()
 
-    cur.execute(f"INSERT INTO users(chanel) VALUES (%s);", (userame,))
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS chanel (
+            id SERIAL PRIMARY KEY,
+            channel VARCHAR(40)
+        );
+    """)
 
+    cur.execute("INSERT INTO chanel(channel) VALUES (%s);", (username,))
 
     conn.commit()
-
     cur.close()
     conn.close()
 
 def get_users():
-    conn = psycopg2.connect("dbname=azamjon user=azamjon password=1111")
+    conn = psycopg2.connect("dbname=subscribe user=postgres password=1234")
     cur = conn.cursor()
 
-    cur.execute("SELECT * FROM users;")
+    cur.execute("SELECT * FROM chanel;")
     users = cur.fetchall()
-
-    conn.commit()
 
     cur.close()
     conn.close()
